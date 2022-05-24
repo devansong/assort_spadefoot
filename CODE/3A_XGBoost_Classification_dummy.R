@@ -8,7 +8,6 @@ library("caret")    # for the confusionmatrix() function (also needs e1071 packa
 library("dplyr")    # for some data preperation
 library("Ckmeans.1d.dp") # for xgb.ggplot.importance
 library(dummies)
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/DATA")
 
 fulldata <- read.csv("fulldata_withdist.csv")
 fulldata <- subset(fulldata, Year== 2017)
@@ -171,8 +170,6 @@ library("archdata") # for the sample dataset
 library("caret")    # for the confusionmatrix() function (also needs e1071 package)
 library("dplyr")    # for some data preperation
 library("Ckmeans.1d.dp") # for xgb.ggplot.importance
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/DATA")
-
 fulldata <- read.csv("fulldata_withdist.csv")
 fulldata <- subset(fulldata, Year== 2016)
 fulldata <- subset(fulldata, SVL_mm > 1)

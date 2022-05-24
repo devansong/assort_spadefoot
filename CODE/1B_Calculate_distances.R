@@ -10,8 +10,6 @@
 
 ##########SETUP#########
 rm(list = ls()) # clear working directory
-
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/Data")
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   library(grid)
   
@@ -59,7 +57,6 @@ library(abind)
 library(reshape)
 library(tidyverse)
 library(cowplot) 
-#library(rgeos)
 
 #Function to turn data into degree coordinates 
 reproject <- function(data){
@@ -88,8 +85,6 @@ calc_dist_to_meadow <- function(data, meadows.sp){
 }
 
 
-
-
 #Import spadefoot data points 
 spade <- read.csv("all_data_cleaned.csv") #load data with all the survey data 
 spade$Y <- as.numeric(spade$Y) #make Y coordinate a number
@@ -100,7 +95,7 @@ spade_coords <- reproject(spade_points)#reproject all spadefoot UTMs to latlong
 
 library(rgeos)
 #Import wetland locations, extract coordinates and convert to latlong 
-ponds <- st_read("~/Dropbox/Publications_Work/Ecosphere_REV/Data/Shapefiles_rasters/2017_PONDS.shp") #read shapefile with pond points
+ponds <- st_read("2017_PONDS.shp") #read shapefile with pond points
 pond_points <- st_coordinates(ponds) #Extract pond coordinates from Shpfiles 
 pond_coords <- reproject(pond_points) #reproject pond UTMs into WGS84 Lat-long 
 
@@ -111,7 +106,7 @@ spade$Dist_to_breeding_pool <- spade_nnd_df$spade_nnd #add this to the data fram
 
 #spade_points is not reprojected; use this from her on 
 #Dist to nearest wetland
-wetlands <- st_read("~/Dropbox/Publications_Work/Ecosphere_REV/DATA/Shapefiles_rasters/COLO_Wetlandsonly2022t.shp")
+wetlands <- st_read("COLO_Wetlandsonly2022t.shp")
 wetlands.sp <- as(wetlands, "Spatial")
 spts_wetlands <- SpatialPoints(spade_points)
 
@@ -120,14 +115,13 @@ spade_nnd_wetland_df <- as.data.frame(spade_nnd_wetland)
 spade$Dist_to_wetland <- spade_nnd_wetland_df$spade_nnd_wetland #add this to the data frame of survey data
 
 
-meadows <- st_read("~/Dropbox/Publications_Work/Ecosphere_REV/DATA/Shapefiles_rasters/Meadows_2022.shp")
+meadows <- st_read("Meadows_2022.shp")
 meadows.sp <- as(meadows, "Spatial")
 spts_meadows <- SpatialPoints(spade_points)
 
 spade_nnd_meadows <- calc_dist_to_meadow(spts_meadows, meadows.sp)
 spade_nnd_meadows_df <- as.data.frame(spade_nnd_meadows)
 spade$Dist_to_meadow <- spade_nnd_meadows_df$spade_nnd_meadows #add this to the data frame of survey data
-
 
 write.csv(spade, file="fulldata_withdist.csv", row.names=FALSE)
 
@@ -137,12 +131,7 @@ write.csv(spade, file="fulldata_withdist.csv", row.names=FALSE)
 plot(spade$Dist_to_meadow, spade$Dist_to_wetland)
 
 
-
-
-
 ##Plot Snout-vent length vs. distance to nearest wetland with marginal densities
-
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/Figures") #set working directory to figures folder 
 #save jpeg image 
 
 spade$Category <- spade$Adjusted_sex

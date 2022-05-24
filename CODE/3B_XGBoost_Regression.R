@@ -10,7 +10,6 @@ library(dummies)
 library(DiagrammeR)
 library("Ckmeans.1d.dp") # for xgb.ggplot.importance
 
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/DATA")
 title <- "extreme gradient boosting"
 fulldata <- read.csv("fulldata_withdist.csv")
 fulldata <- subset(fulldata, Year == "2017")
@@ -139,7 +138,6 @@ library(dummies)
 library(DiagrammeR)
 library("Ckmeans.1d.dp") # for xgb.ggplot.importance
 
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/DATA")
 title <- "extreme gradient boosting"
 fulldata <- read.csv("fulldata_withdist.csv")
 fulldata <- subset(fulldata, Year == "2016")

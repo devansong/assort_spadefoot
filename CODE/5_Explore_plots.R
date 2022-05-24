@@ -3,7 +3,6 @@
 
 graphics.off()
 rm(list = ls())
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/DATA") #set working directory with csv files 
 
 library(igraph)
 library(ggplot2)
@@ -178,23 +177,7 @@ p7 <- insert_xaxis_grob(legend, xdens, grid::unit(.2, "null"), position = "top")
 p8<- insert_yaxis_grob(p7, ydens, grid::unit(.2, "null"), position = "right")
 ggdraw(p8)
 
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/FIGURES")
-png("LEGEND.png", units="in", width=8, height=6.5, res=600)
-ggdraw(p8)
-dev.off()
-
-
-
 multiplot(ggdraw(p2), ggdraw(p4), ggdraw(p6), cols=3)
-
-
-
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/FIGURES")
-png("Exploratory_degree.png", units="in", width=8.2, height=3, res=300)
-multiplot(ggdraw(p1), ggdraw(p3), ggdraw(p5), cols=3)
-dev.off()
-
-
 
 
 

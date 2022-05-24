@@ -8,7 +8,6 @@
 
 ############SETUP##############################################
 rm(list = ls()) # clear working directory
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/DATA") #set working directory
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   library(grid)
   
@@ -95,14 +94,14 @@ extract_prob <- function(df){
 }
 
 
-ponds <- st_read("~/Dropbox/Publications_Work/Ecosphere_REV/DATA/Shapefiles_rasters/2017_PONDS.shp")
+ponds <- st_read("2017_PONDS.shp")
 pond_points <- st_coordinates(ponds) #Extract coordinates from Shpfiles 
 pond_coords <- reproject(pond_points) #reproject points 
 
 
 
 
-spadefoot <- read.csv("~/Dropbox/Publications_Work/Ecosphere_REV/DATA/2017_data_cleaned.csv")
+spadefoot <- read.csv("2017_data_cleaned.csv")
 spadefoot <- spadefoot %>% drop_na(SVL_mm) #drop any indiv with no SVL 
 
 
@@ -187,7 +186,6 @@ fy2 <- c(rep(1.6, 1))
 
 fshade = data.frame(fx1, fx2, fy1, fy2)
 fshade
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/DATA")
 write.csv(fshade, file="significant_xvals_M_breedingpools_SIZE.csv", row.names=FALSE)
 read.csv("significant_xvals_M_Breedingpools_SIZE.csv")
 
@@ -210,12 +208,9 @@ sizeplot <- ggplot() +
         legend.position = "none")
 sizeplot
 
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/FIGURES")
 png("BreedingPool_NBA_SIZE.png", units="in", width=6, height=5, res=600)
 sizeplot
 dev.off()
-
-
 
 cumprobplot <- ggplot(data=prob_size, aes(x=dist, y=X0)) +
   geom_line() + 

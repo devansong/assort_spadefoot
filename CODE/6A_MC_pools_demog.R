@@ -9,7 +9,6 @@
 ############SETUP##############################################
 rm(list = ls()) # clear working directory
 graphics.off()
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/DATA") #set working directory
 library(raster)
 library(rgdal)
 library(sf)
@@ -106,35 +105,24 @@ extract_prob <- function(df){
 
 
 
-#function to plot CDF of nnd (nearest neighbour distance)
-#plot_cdf <- function(data, ylimit){
-#  breaks = seq(0, 1250, by=1) 
-##  nnd.cut = cut(data, breaks, right=FALSE) 
-#  nnd.freq = table(nnd.cut)
-#  cumfreq0 = c(0, cumsum(nnd.freq))
-#  qplot(breaks, cumfreq0) + ylim(0, ylimit)
-#}
-
-
-
 ##########Import habitat features around road############################### 
-buffer <- st_read("~/Dropbox/Publications_Work/Ecosphere_REV/DATA/Shapefiles_rasters/Apr_2020_Polygon.shp")
+buffer <- st_read("Apr_2020_Polygon.shp")
 #Import wetland locations, extract coordinates and convert to latlong 
-ponds <- st_read("~/Dropbox/Publications_Work/Ecosphere_REV/DATA/Shapefiles_rasters/2017_PONDS.shp")
+ponds <- st_read("2017_PONDS.shp")
 pond_points <- st_coordinates(ponds) #Extract coordinates from Shpfiles 
 pond_coords <- reproject(pond_points) #reproject points 
 ############################################################################
 
 
 #####Import main dataset: spadefoot data points and subset by F, M, and SNBA
-spadefoot <- read.csv("~/Dropbox/Publications_Work/Ecosphere_REV/DATA/2017_data_cleaned.csv")
+spadefoot <- read.csv("2017_data_cleaned.csv")
 spadefoot <- spadefoot %>% drop_na(SVL_mm) #drop any indiv with no SVL 
 
 
 #Change this for every sex 
 nrow(subset(spadefoot, Adjusted_sex =="NBA")) #243, 299, 74, 535
-SEX <- "NBA"
-SAMPLESIZE <- 74
+SEX <- "S"
+SAMPLESIZE <- 535
 
 
 ##########From here onwards, functions are for 3 DIFFERENT DEMOGRAPHY#######
@@ -161,7 +149,7 @@ for (i in c(1:1000)) {
 
 RND$id <- c(1:SAMPLESIZE)
 mRND <- melt(RND, id="id")
-#write.csv(mRND_F, "~/Dropbox/Publications_Work/SHOLBROOKII_CLUSTERING/DATA/mRND_F.csv")
+write.csv(mRND, "mRND_S_breedingpools.csv")
 
 # Create data frame to bind all columns 
 ECDF = data.frame(id=seq(1, 1251, 1))
@@ -181,32 +169,18 @@ for (i in c(2:1001)) {
 
 prob <-extract_prob(ECDF)
 prob$dist <- c(1:1251)
-#plot(prob$dist, prob$X0)
 
-#write.csv(prob, "~/Dropbox/Publications_Work/SHOLBROOKII_CLUSTERING/DATA/prob_f.csv")
-#prob<- read.csv("prob.csv")
-
+write.csv(prob, "/prob_f.csv")
 subset_prob<- subset(prob, X0<0.00416666666 | X0>0.9958333)
 
-fx1 <- c(639,880)
-fx2 <- c(880, 900)
+fx1 <- c(38, 647)
+fx2 <- c(355, 829)
 fy1 <- c(rep(0, 2))
 fy2 <- c(rep(1, 2))
 
 fshade = data.frame(fx1, fx2, fy1, fy2)
+write.csv(fshade, file="significant_xvals_S_breedingpools.csv", row.names = FALSE)
 
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/DATA")
-write.csv(fshade, file="significant_xvals_M_breedingpools.csv", row.names = FALSE)
-
-
-#fx1 <- c(1, 27, 839)
-#fx2 <- c(4, 607, 1000)
-#fy1 <- c(rep(0, 3))
-#fy2 <- c(rep(1, 3))
-
-#fshade = data.frame(fx1, fx2, fy1, fy2)
-
-###RCHANGE TITLE OF PLOT EVERYTIME!!! 
 #####
 pS <- ggplot() + ####REMEMEBER TO CHANGE THIS!!!! 
   geom_rect(data=fshade, 
@@ -216,17 +190,16 @@ pS <- ggplot() + ####REMEMEBER TO CHANGE THIS!!!!
   scale_x_continuous(breaks = round(seq(min(0), max(1000), by = 100),1), limits=c(0,890))+
   scale_color_manual(values=c(rep("darkgrey", 1000)))+
   stat_ecdf(data=spade_nnd_df, aes(spade_nnd), color="black", size=1.3) + 
-  ggtitle(SEX)+
-  ylab("Cumulative Distr. of No. of Frogs") + 
-  xlab("Distance to Nearest Spadefoot Breeding Pool (m)")+ 
+  ggtitle("")+
+  ylab("") + 
+  xlab("")+ 
   theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), legend.position = "none")
 
 pS
 
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/FIGURES")
-png("Breedingpool_NBA.png", units="in", width=6, height=5, res=600)
+png("Breedingpool_S.png", units="in", width=3, height=2.5, res=600)
 pS
 dev.off()
 

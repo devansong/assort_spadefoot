@@ -5,7 +5,6 @@ rm(list = ls()) # clear working directory
 library(tidyverse)
 library("dplyr")       
 
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/DATA")
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   library(grid)
   
@@ -43,78 +42,108 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 } #function for multiplot in ggplot2
 
 sex_2017<- read.csv("importance_matrix_2017_SEX.csv")
-sex_2017 <- sex_2017_full[order(sex_2017$Importance, decreasing = TRUE), ]
+sex_2017 <- sex_2017[order(sex_2017$Importance, decreasing = TRUE), ]
 sex_2017 <- sex_2017[c(1:10), ]
+sex_2017$newfeature <- c("Distance to breeding pool", 
+                         "Distance to other wetland",
+                         "Distance to meadow",
+                         "Soil: middle clay",
+                         "Soil: middle sandy clay loam",
+                         "Habitat: successional tuliptree",
+                         "Soil: top fine sandy loam",
+                         "Soil: alluvium parent material",
+                         "Soil: middle clay loam",
+                         "Habitat: mesic mixed hardwood")
 
 svl_2017 <- read.csv("importance_matrix_2017_SVL.csv")
 svl_2017 <- svl_2017[order(svl_2017$Importance, decreasing = TRUE), ]
 svl_2017 <- svl_2017[c(1:10), ]
+svl_2017$newfeature <-
+  c("Distance to breeding pool", 
+  "Distance to other wetland",
+  "Distance to meadow",
+  "Soil: middle clay loam",
+  "Soil: alluvium parent material",
+  "Soil: middle clay",
+  "Soil: middle clay loam",
+  "Habitat: successional tuliptree",
+  "Soil: top fine sandy loam",
+  "Habitat: mesic mixed hardwood")
 
 sex_2016 <- read.csv("importance_matrix_2016_SEX.csv")
 sex_2016 <- sex_2016[order(sex_2016$Importance, decreasing = TRUE), ]
 sex_2016 <- sex_2016[c(1:10), ]
+sex_2016$newfeature <- c("Distance to meadow",
+                         "Distance to breeding pool", 
+                         "Distance to other wetland",
+                         "Habitat: successional tuliptree",
+                         "Soil: middle clay loam",
+                         "Soil: middle sandy clay loam",
+                         "Soil: top fine sandy loam",
+                         "Habitat: mesic mixed hardwood", 
+                         "Soil: middle silty clay", 
+                         "Soil: somewhat poorly drained")
+  
 
 svl_2016 <- read.csv("importance_matrix_2016_SVL.csv")
 svl_2016 <- svl_2016[order(svl_2016$Importance, decreasing = TRUE), ]
 svl_2016 <- svl_2016[c(1:10), ]
-
-
-
+svl_2016$newfeature <- c("Distance to breeding pool", 
+                         "Distance to other wetland",
+                         "Distance to meadow",
+                         "Soil: middle clay loam",
+                         "Soil: alluvium parent material",
+                         "Soil: middle clay",
+                         "Soil: middle sandy clay loam",
+                         "Habitat: successional tuliptree",
+                         "Soil: top fine sandy loam",
+                         "Habitat: mesic mixed hardwood")
+                      
 
   
-p1 <- ggplot(sex_2017, aes(reorder(Feature, Importance), Importance)) +
+p1 <- ggplot(sex_2017, aes(reorder(newfeature, Importance), Importance)) +
   geom_col(fill="#58508d") +
   coord_flip()+
-  labs(x = "", y ="Relative Importance of Feature") +
+  labs(x = "", y =paste0("Relative", "\n", "Importance")) +
   ylim(c(0, 0.4)) +
-  ggtitle("Predicting Stage (2017)")+
+  ggtitle("Stage (2017)")+
   theme_classic()
 
+p1
 
-p2 <- ggplot(svl_2017, aes(reorder(Feature, Importance), Importance)) + 
+p2 <- ggplot(svl_2017, aes(reorder(newfeature, Importance), Importance)) + 
   geom_col(fill="#58508d") +
   coord_flip() + 
-  labs(x = "", y ="Relative Importance of Feature") +
+  labs(x = "", y =paste0("Relative", "\n", "Importance")) +
   ylim(c(0, 0.4)) +
-  ggtitle("Predicting Snout-vent Length (2017)")+
+  ggtitle("SVL (2017)")+
   theme_classic()
 
 multiplot(p1, p2, cols=2)
 
 
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/FIGURES")
-png("Feature_Importane_2017.png", units="in", width=14, height=4, res=300)
-multiplot(p1, p2, cols=2)
-dev.off()
-       
 
 
-
-
-p3 <- ggplot(sex_2016, aes(reorder(Feature, Importance), Importance)) +
+p3 <- ggplot(sex_2016, aes(reorder(newfeature, Importance), Importance)) +
   geom_col(fill="#58508d") +
   coord_flip()+
-  labs(x = "", y ="Relative Importance of Feature") +
+  labs(x = "", y =paste0("Relative", "\n", "Importance")) +
   ylim(c(0, 0.4)) +
-  ggtitle("Predicting Stage (2016)")+
+  ggtitle("Stage (2016)")+
   theme_classic()
 
 
-p4 <- ggplot(svl_2016, aes(reorder(Feature, Importance), Importance)) + 
+p4 <- ggplot(svl_2016, aes(reorder(newfeature, Importance), Importance)) + 
   geom_col(fill="#58508d") +
   coord_flip() + 
-  labs(x = "", y ="Relative Importance of Feature") +
+  labs(x = "", y =paste0("Relative", "\n", "Importance")) +
   ylim(c(0, 0.4)) +
-  ggtitle("Predicting Snout-vent Length (2016)")+
-  theme_classic()
+  ggtitle("SVL (2016)")+
+  theme_classic()+
+  annotate("text", x = 0, y = 0, label = "D", col="blue")
+
+p4
 
 multiplot(p3, p4, cols=2)
-
-
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/FIGURES")
-png("Feature_Importane_2016.png", units="in", width=14, height=4, res=300)
-multiplot(p3, p4, cols=2)
-dev.off()
-       
 
 multiplot(p1, p2, p3, p4, cols=2)

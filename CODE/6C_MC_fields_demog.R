@@ -9,7 +9,6 @@
 ############SETUP##############################################
 rm(list = ls()) # clear working directory
 graphics.off()
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/DATA") #set working     directory
 library(raster)
 library(rgdal)
 library(sf)
@@ -118,9 +117,9 @@ extract_prob <- function(df){
 
 
 ##########Import habitat features around road############################### 
-buffer <- st_read("~/Dropbox/Publications_Work/Ecosphere_REV/DATA/Shapefiles_rasters/Apr_2020_Polygon.shp")
+buffer <- st_read("Apr_2020_Polygon.shp")
 #Import wetland locations, extract coordinates and convert to latlong 
-meadows <- st_read("~/Dropbox/Publications_Work/Ecosphere_REV/DATA/Shapefiles_rasters/Meadows_2022.shp")
+meadows <- st_read("Meadows_2022.shp")
 ############################################################################
 
 plot(buffer)
@@ -134,8 +133,8 @@ spadefoot <- spadefoot %>% drop_na(SVL_mm) #drop any indiv with no SVL
 
 #Change this for every sex 
 nrow(subset(spadefoot, Adjusted_sex =="S")) #243, 299, 74, 535
-SEX <- "S"
-SAMPLESIZE <-535
+SEX <- "F"
+SAMPLESIZE <-243
 
 
 ##########From here onwards, functions are for 3 DIFFERENT DEMOGRAPHY#######
@@ -173,7 +172,7 @@ for (i in c(1:1000)) {
 
 RND$id <- c(1:SAMPLESIZE)
 mRND <- melt(RND, id="id")
-#write.csv(mRND_F, "~/Dropbox/Publications_Work/SHOLBROOKII_CLUSTERING/DATA/mRND_F.csv")
+write.csv(mRND_F, "mRND_F_meadow.csv")
 
 # Create data frame to bind all columns 
 ECDF = data.frame(id=seq(1, 1251, 1))
@@ -195,41 +194,38 @@ prob <-extract_prob(ECDF)
 prob$dist <- c(1:1251)
 #plot(prob$dist, prob$X0)
 
-#write.csv(prob, "~/Dropbox/Publications_Work/SHOLBROOKII_CLUSTERING/DATA/prob_f.csv")
+#write.csv(prob, "/prob_f.csv")
 #prob<- read.csv("prob.csv")
 
 subset_prob<- subset(prob, X0<0.00416666666 | X0>0.9958333)
 
-fx1 <- c(1, 41, 228, 317)
-fx2 <- c(12, 113, 286, 584)
-fy1 <- c(rep(0, 4))
-fy2 <- c(rep(1, 4))
+fx1 <- c(21)
+fx2 <- c(188)
+fy1 <- c(rep(0, 1))
+fy2 <- c(rep(1, 1))
 
 fshade = data.frame(fx1, fx2, fy1, fy2)
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/DATA")
-write.csv(fshade, file="significant_xvals_S_meadows.csv", row.names=FALSE)
+write.csv(fshade, file="significant_xvals_F_meadows.csv", row.names=FALSE)
 
 ###RCHANGE TITLE OF PLOT EVERYTIME!!! 
 #####
 pS <- ggplot() + ####REMEMEBER TO CHANGE THIS!!!! 
   geom_rect(data=fshade, 
-            mapping=aes(xmin=fx1, xmax=fx2, ymin=fy1, ymax=fy2), fill='blue', alpha=0.3)+
+            mapping=aes(xmin=fx1, xmax=fx2, ymin=fy1, ymax=fy2), fill='red', alpha=0.3)+
   stat_ecdf(data=mRND, aes(value,  colour = variable, alpha=0.95)) + 
   scale_y_continuous(breaks = round(seq(min(0), max(1), by = 0.1),1), limits=c(0,1))+
   scale_x_continuous(breaks = round(seq(min(0), max(1000), by = 100),1), limits=c(0,890))+
   scale_color_manual(values=c(rep("darkgrey", 1000)))+
   stat_ecdf(data=spade_nnd_df, aes(spade_nnd), color="black", size=1.3) + 
-  ggtitle(SEX)+
-  ylab("Cumulative Distr. of No. of Frogs") + 
-  xlab("Distance to Nearest Meadow (m)")+ 
+  ggtitle("")+
+  ylab("") + 
+  xlab("")+ 
   theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), legend.position = "none")
 
 pS
-
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/FIGURES")
-png("Meadow_S.png", units="in", width=6, height=5, res=600)
+png("Meadow_F.png", units="in", width=3, height=2.5, res=600)
 pS
 dev.off()
 

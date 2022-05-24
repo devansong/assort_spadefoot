@@ -10,8 +10,6 @@
 
 ##########SETUP#########
 rm(list = ls()) # clear working directory
-
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/Data")
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   library(grid)
   
@@ -84,7 +82,7 @@ spade_points <- spade[c("X", "Y")] # make a dataframe with all the xy coordinate
 spade_coords <- reproject(spade_points)#reproject all spadefoot UTMs to latlong 
 
 #Import wetland locations, extract coordinates and convert to latlong 
-ponds <- st_read("~/Dropbox/Publications_Work/Ecosphere_REV/Data/Shapefiles_rasters/2017_PONDS.shp") #read shapefile with pond points
+ponds <- st_read("2017_PONDS.shp") #read shapefile with pond points
 pond_points <- st_coordinates(ponds) #Extract pond coordinates from Shpfiles 
 pond_coords <- reproject(pond_points) #reproject pond UTMs into WGS84 Lat-long 
 
@@ -94,9 +92,6 @@ spade$Distance <- spade_nnd_df$spade_nnd #add this to the data frame of survey d
 
 
 ##Plot Snout-vent length vs. distance to nearest wetland with marginal densities
-
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/Figures") #set working directory to figures folder 
-#save jpeg image 
 
 spade$Category <- spade$Adjusted_sex
 

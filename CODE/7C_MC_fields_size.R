@@ -9,7 +9,6 @@
 ############SETUP##############################################
 rm(list = ls()) # clear working directory
 graphics.off()
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/DATA") #set working directory
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   library(grid)
   
@@ -96,18 +95,16 @@ plot_cdf <- function(data, ylimit){
 
 
 
-buffer <- st_read("~/Dropbox/Publications_Work/Ecosphere_REV/DATA/Shapefiles_rasters/Apr_2020_Polygon.shp")
+buffer <- st_read("Apr_2020_Polygon.shp")
 #Import wetland locations, extract coordinates and convert to latlong 
-meadows <- st_read("~/Dropbox/Publications_Work/Ecosphere_REV/DATA/Shapefiles_rasters/Meadows_2022.shp")
+meadows <- st_read("Meadows_2022.shp")
 ############################################################################
 
 plot(buffer)
 plot(meadows$geometry)
 meadows.sp <- as(meadows, "Spatial")
 
-
-
-spadefoot <- read.csv("~/Dropbox/Publications_Work/Ecosphere_REV/DATA/2017_data_cleaned.csv")
+spadefoot <- read.csv("2017_data_cleaned.csv")
 spadefoot <- spadefoot %>% drop_na(SVL_mm) #drop any indiv with no SVL 
 
 
@@ -176,7 +173,6 @@ for (i in 2:1001){
 }
 
 
-
 cumsize_rand <-cbind(cumsize[, c(2,1)], cumsize_rand[, 2:1001])
 prob_size <-extract_prob(cumsize_rand)
 prob_size$dist <- c(1:1250)
@@ -203,13 +199,9 @@ sizeplot <- ggplot() +
         legend.position = "none")
 sizeplot
 
-
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/FIGURES")
 png("Meadow_NBA_SIZE.png", units="in", width=6, height=5, res=600)
 sizeplot
 dev.off()
-
-
 
 
 #bind cumsize_m and cumsize_m_rand

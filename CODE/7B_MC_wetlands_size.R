@@ -9,7 +9,6 @@
 ############SETUP##############################################
 rm(list = ls()) # clear working directory
 graphics.off()
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/DATA") #set working directory
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   library(grid)
   
@@ -96,16 +95,14 @@ plot_cdf <- function(data, ylimit){
 
 
 
-wetlands <- st_read("~/Dropbox/Publications_Work/Ecosphere_REV/DATA/Shapefiles_rasters/COLO_Wetlandsonly2022t.shp")
+wetlands <- st_read("COLO_Wetlandsonly2022t.shp")
 ############################################################################
 
 plot(buffer)
 plot(wetlands$geometry)
 wetlands.sp <- as(wetlands, "Spatial")
 
-
-
-spadefoot <- read.csv("~/Dropbox/Publications_Work/Ecosphere_REV/DATA/2017_data_cleaned.csv")
+spadefoot <- read.csv("2017_data_cleaned.csv")
 spadefoot <- spadefoot %>% drop_na(SVL_mm) #drop any indiv with no SVL 
 
 
@@ -188,7 +185,6 @@ fy2 <- c(rep(2.2, 1))
 
 fshade = data.frame(fx1, fx2, fy1, fy2)
 fshade
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/DATA")
 write.csv(fshade, file="significant_xvals_S_wetlands_SIZE.csv", row.names=FALSE)
 
 re_cumsize_rand <- melt(cumsize_rand, id="id")
@@ -210,7 +206,6 @@ sizeplot <- ggplot() +
         legend.position = "none")
 sizeplot
 
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/FIGURES")
 png("Wetland_F_SIZE.png", units="in", width=6, height=5, res=600)
 sizeplot
 dev.off()

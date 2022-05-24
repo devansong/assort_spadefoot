@@ -10,7 +10,6 @@
 
 graphics.off()
 rm(list = ls())
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/DATA") #set working directory with csv files 
 
 library(igraph)
 library(ggplot2)
@@ -71,7 +70,7 @@ spade <- subset(spade, Adjusted_sex != "NA")
 ##############################################################
 
 #read in matrix data created in Python 
-e1 <- read.csv("~/Dropbox/Publications_Work/Ecosphere_REV/DATA/20220117_2016_matrix.csv",header=TRUE)
+e1 <- read.csv("20220117_2016_matrix.csv",header=TRUE)
 e1 <- na.omit(e1) #omit NAs 
 
 #Here is where we decide what distance to define edges. 
@@ -95,11 +94,10 @@ V(net)$color[which(V(net)$Adjusted_sex=="S")] <- clrs[[4]]
 V(net)$square <- V(net)$SVL_mm
 
 nodesize <- V(net)$square/10
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/Figures") #set working directory to figures folder 
 
 #graphics.off()
 #plot.new()
-#png("Network2017.png", units="in", width=10, height=9, res=300)
+png("Network2017.png", units="in", width=10, height=9, res=300)
 plot(net, layout = layout_with_kk, vertex.label=NA, vertex.size=nodesize, edge.color = rgb(70/255, 130/255, 180/255, 0.95))
 legend(x=1, y = 1, legend=levels(as.factor(V(net)$Adjusted_sex))  , col = "black", bty = "n", pch=21, pt.bg = clrs, pt.cex = 2, cex = 1, text.col="black" , horiz = FALSE, inset = c(0.1, 0.1))
 #dev.off()
@@ -194,14 +192,10 @@ homophily_df <- rbind(df, bysize, bysex)
 homophily_df
 
 
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/DATA")
-
 write.csv(homophily_df, file="homophily_2016_10m.csv", row.names=FALSE)
-
-
 #import csv of homophily, created from jacknifing and assortativity above 
 
-homophily<- read.csv("~/Dropbox/Publications_Work/Ecosphere_REV/DATA/homophily_2016_10m.csv",header=TRUE)
+homophily<- read.csv("homophily_2017_25m.csv",header=TRUE)
 homophily <- as.data.frame(homophily)
 homophily$i <- as.character(homophily$i)
 homophily$i <- as.factor(homophily$i)
@@ -218,8 +212,7 @@ homophily$rename <- c("F*size",
 
 homophily
 
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/FIGURES")
-png("Homophily_2016_10m.png", units="in", width=2.4, height=3, res=300)
+png("Homophily_2017_25m.png", units="in", width=2.4, height=2, res=300)
 ggplot(homophily, aes(x=rename, y=assortativity)) + 
   geom_errorbar(width=.1, aes(ymin=lowerCI, ymax=upperCI)) +
   geom_hline(yintercept=0, linetype="dashed", color = "red")+
@@ -248,7 +241,6 @@ sS <- induced_subgraph(net, V(net)$Adjusted_sex == "S")
 deg <- data.frame(degree=degree(net)) #all degrees 
 deg$demog <- V(net)$Adjusted_sex
 deg$lineOrig <- V(net)$name
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/DATA")
 write.csv(deg, file="Degree_10m_2016.csv", row.names = FALSE)
 
 as.data.frame(V(sM)$name) # ids of males 
@@ -263,14 +255,12 @@ deg$SVL_mm <- V(net)$SVL_mm
 ggplot(deg, aes(x=SVL_mm, y=degree, color=Adjusted_sex))+
   geom_point(alpha=0.7)
 
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/FIGURES")
-
 #PLOT SVL AGAINST DEGREE!!!! 
 library(cowplot) 
 # Main plot
 
 plot.new()
-#png("Figure_Exploratory_Degree_2016.png", units="in", width=7.5, height=5.5, res=300)
+png("Figure_Exploratory_Degree_2016.png", units="in", width=7.5, height=5.5, res=300)
 pmain <- ggplot(deg, aes(x=SVL_mm, y=degree, color=Adjusted_sex))+
   geom_point(alpha=0.7)+
   scale_color_manual(values=c("Red", "Blue", "Grey", "Gold"))+ 
@@ -307,7 +297,6 @@ mu$Stage <- mu$Adjusted_sex
 deg$Stage<- deg$Adjusted_sex
 graphics.off()
 plot.new()
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/FIGURES")
 png("degree_dist_2016_10m.png", units="in", width=3, height=2.5, res=300)
 ggplot(deg, aes(x=degree, fill=Stage)) + 
   geom_density() + 
@@ -338,12 +327,6 @@ summary(eeks)
 eeks$ad
 
 write.csv(eeks$ad, file="ADtest_2016_10m.csv")
-
-
-#kruskal.test(degree(sM), degree(sJ))
-#ad.test(degree(sM), degree(sJ))
-#ad.test(degree(sM), degree(sF))
-
 
 
 #CHISQARE
@@ -381,8 +364,6 @@ rownames(contabtest$residuals) <- c("F", "M", "NBA", "S")
 graphics.off()
 par(mfrow=c(1,1), mar = c(0.5,0.5,0.5,0.5)) 
 corrplot(contabtest$residuals,is.cor=FALSE, tl.col="black", cl.align = "l", mar = c(3.2, 0, 0, 3), cl.pos='b', type="lower", cl.length=5, cl.lim = c(-10,11)) ## set options here to do only color
-
-setwd("~/Dropbox/Publications_Work/Ecosphere_REV/FIGURES")
 
 png("Correlation_plot_2016_10m.png", units="in", width=6, height=6, res=300)
 corrplot(contabtest$residuals,is.cor=FALSE, tl.col="black", cl.align = "l", mar = c(3.2, 0, 0, 3), cl.pos='b', type="lower", cl.length=5, cl.lim = c(-4,4)) 
